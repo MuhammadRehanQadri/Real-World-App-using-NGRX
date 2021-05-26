@@ -7,13 +7,14 @@
           <a [routerLink]="['login']">Have an account?</a>
         </p>
         BackendErrors are herel
-        <form >
+        <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
           <fieldset>
             <fieldset class="form-group">
               <input
                 type="text"
                 class="form-control form-control-lg"
                 placeholder="Username"
+                formConrolName="username"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -21,6 +22,7 @@
                 type="text"
                 class="form-control form-control-lg"
                 placeholder="Email"
+                formControlName="email"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -28,6 +30,7 @@
                 type="password"
                 class="form-control form-control-lg"
                 placeholder="Password"
+                formControlName="password"
               />
             </fieldset>
             <button
