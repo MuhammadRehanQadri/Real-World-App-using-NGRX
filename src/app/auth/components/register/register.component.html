@@ -7,6 +7,7 @@
           <a [routerLink]="['login']">Have an account?</a>
         </p>
         BackendErrors are herel
+        --- {{isSubmitting$ | async}} ---
         <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
           <fieldset>
             <fieldset class="form-group">
