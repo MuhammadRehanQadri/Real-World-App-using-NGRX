@@ -1,31 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AppStateInterface } from 'src/app/shared/types/appState.interface';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { select, Store } from '@ngrx/store'
+import { Observable } from 'rxjs'
+import { AppStateInterface } from 'src/app/shared/types/appState.interface'
+import { AuthService } from '../../services/auth.service'
 
-import { registerAction } from '../../store/actions/register.action';
-import { isSubmittingSelector } from '../../store/selectors';
+import { registerAction } from '../../store/actions/register.action'
+import { isSubmittingSelector } from '../../store/selectors'
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup
   isSubmitting$!: Observable<boolean>
 
-  constructor(private formBuilder: FormBuilder, private store: Store<AppStateInterface>) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private store: Store<AppStateInterface>,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm()
     this.initializeValues()
   }
-  initializeValues() : void {
+  initializeValues(): void {
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector))
   }
-  initializeForm() : void{
+  initializeForm(): void {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', Validators.required],
@@ -33,8 +38,9 @@ export class RegisterComponent implements OnInit {
     })
   }
 
-  onFormSubmit(){
+  onFormSubmit() {
     console.log('form', this.form.value, this.form.valid)
     this.store.dispatch(registerAction(this.form.value))
+    this.authService.register(this.form.value).subscribe()
   }
 }
