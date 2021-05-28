@@ -18,7 +18,7 @@ export class AuthService {
 
     return this.http
       .post<AuthResponseInterface>(url, data)
-      .pipe(map((response: AuthResponseInterface) => response.user))
+      .pipe(map(this.getUser))
   }
 
   login(data: LoginRequestInterface): Observable<CurrentUserInterface> {
@@ -26,6 +26,10 @@ export class AuthService {
 
     return this.http
       .post<AuthResponseInterface>(url, data)
-      .pipe(map((response: AuthResponseInterface) => response.user))
+      .pipe(map(this.getUser))
+  }
+
+  getUser(response: AuthResponseInterface) : CurrentUserInterface {
+    return response.user
   }
 }
