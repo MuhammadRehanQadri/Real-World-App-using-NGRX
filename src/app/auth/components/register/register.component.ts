@@ -6,6 +6,7 @@ import { AppStateInterface } from 'src/app/shared/types/appState.interface'
 
 import { registerAction } from '../../store/actions/register.action'
 import { isSubmittingSelector } from '../../store/selectors'
+import { RegisterRequestInterface } from '../../types/registerRequest.interface'
 
 @Component({
   selector: 'app-register',
@@ -38,6 +39,9 @@ export class RegisterComponent implements OnInit {
 
   onFormSubmit() {
     console.log('form', this.form.value, this.form.valid)
-    this.store.dispatch(registerAction(this.form.value))
+    const request: RegisterRequestInterface = {
+      user: this.form.value
+    }
+    this.store.dispatch(registerAction({request}))
   }
 }
