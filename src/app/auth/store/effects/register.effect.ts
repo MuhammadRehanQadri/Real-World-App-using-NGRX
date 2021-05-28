@@ -12,10 +12,15 @@ import {
   registerSuccessAction,
 } from '../actions/register.action'
 import { RegisterRequestInterface } from '../../types/registerRequest.interface'
+import { PersistanceService } from 'src/app/shared/services/persistance.service'
 
 @Injectable()
 export class RegisterEffect {
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private persistanceService: PersistanceService
+  ) {}
 
   register$ = createEffect(() =>
     this.actions$.pipe(
@@ -23,12 +28,13 @@ export class RegisterEffect {
       switchMap(({ request }) => {
         return this.authService.register(request).pipe(
           map((currentUser: CurrentUserInterface) => {
+            this.persistanceService.set('accessToken', currentUser.token)
             return registerSuccessAction({ currentUser })
           }),
 
           catchError((errorResponse: HttpErrorResponse) => {
             return of(
-              registerFailureAction({errors: errorResponse.error.errors})
+              registerFailureAction({ errors: errorResponse.error.errors })
             )
           })
         )
