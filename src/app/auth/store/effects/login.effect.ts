@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
 import { Actions, createEffect, ofType } from '@ngrx/effects'
 import { of } from 'rxjs'
 import { catchError, map, switchMap, tap } from 'rxjs/operators'
+import { PersistanceService } from 'src/app/shared/services/persistance.service'
 
 import { CurrentUserInterface } from 'src/app/shared/types/currentUser.interface'
 import { AuthService } from '../../services/auth.service'
@@ -15,7 +16,8 @@ export class LoginEffect {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private persistanceService: PersistanceService
   ) {}
 
   login$ = createEffect(() =>
@@ -24,6 +26,7 @@ export class LoginEffect {
       switchMap(({ request }) => {
         return this.authService.login(request).pipe(
           map((currentUser: CurrentUserInterface) => {
+            this.persistanceService.set('accessToken', currentUser.token)
             return loginSuccessAction({ currentUser })
           }),
 
