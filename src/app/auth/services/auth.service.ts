@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(data: RegisterRequestInterface): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/api/users'
+    const url = environment.apiUrl + '/users'
 
     return this.http
       .post<AuthResponseInterface>(url, data)
@@ -22,10 +22,18 @@ export class AuthService {
   }
 
   login(data: LoginRequestInterface): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/api/users/login'
+    const url = environment.apiUrl + '/users/login'
 
     return this.http
       .post<AuthResponseInterface>(url, data)
+      .pipe(map(this.getUser))
+  }
+
+  getCurrentUser(): Observable<CurrentUserInterface> {
+    const url = environment.apiUrl + '/user'
+
+    return this.http
+      .get<AuthResponseInterface>(url)
       .pipe(map(this.getUser))
   }
 
